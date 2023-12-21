@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:provider/provider.dart';
 import 'package:stocodi_app/screens/app.dart';
-import 'package:stocodi_app/model/portfolio/portfolio_data.dart';
 import 'package:stocodi_app/screens/sign_up/signup.dart';
 import 'package:stocodi_app/screens/sign_up/splash_screen.dart';
 import 'API/retrofit/auth_manager.dart';
@@ -58,24 +56,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => PortfolioData(),
-      child: MaterialApp(
-        home: Builder(
-          builder: (context) => FutureBuilder(
-            future: autoLogin(context),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 1000),
-                  child: _splashLoadingWidget(snapshot),
-                );
-              } else {
-                // 여기서 로딩 중인 상태에 해당하는 위젯을 반환할 수 있습니다.
-                return const Splash_Screen();
-              }
-            },
-          ),
+    return MaterialApp(
+      home: Builder(
+        builder: (context) => FutureBuilder(
+          future: autoLogin(context),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return AnimatedSwitcher(
+                duration: const Duration(milliseconds: 1000),
+                child: _splashLoadingWidget(snapshot),
+              );
+            } else {
+              // 여기서 로딩 중인 상태에 해당하는 위젯을 반환할 수 있습니다.
+              return const Splash_Screen();
+            }
+          },
         ),
       ),
     );

@@ -32,7 +32,6 @@ dependencies:
     sdk: flutter
   android_intent:
   css_colors:
-  youtube_explode_dart: ^2.0.0
   cookie_jar: ^4.0.0
   path_provider: ^2.0.5
   dio_cookie_manager: ^3.0.0
@@ -55,7 +54,6 @@ dependencies:
   fluttertoast: ^8.2.3
   shared_preferences: ^2.2.2
   web_socket_channel: ^2.4.0
-  provider: ^6.1.1
   youtube_player_flutter: ^8.1.2
   flutter_bloc: ^8.0.0
   # The following adds the Cupertino Icons font to your application.
@@ -150,7 +148,6 @@ flutter:
     - assets/images/grid1.png
     - assets/images/grid3.png
     - assets/images/grid4.png
-    - assets/images/app_background.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

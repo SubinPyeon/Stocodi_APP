@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import '../../../theme/class_room_theme.dart';
+import '../data/course_data.dart';
 import 'course_card_item.dart';
-import 'package:youtube_explode_dart/youtube_explode_dart.dart' as yt;
 
 final theme = ClassRoomTheme.getAppTheme();
 final textTheme = theme.textTheme;
 
 class CourseItem extends StatelessWidget {
   final String courseTitle;
-  final List<String> courseList;
+  final List<CourseData> courseList;
 
-  const CourseItem({
-    Key? key,
-    required this.courseTitle,
-    required this.courseList,
-  }) : super(key: key);
+  const CourseItem({Key? key, required this.courseTitle, required this.courseList,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +25,7 @@ class CourseItem extends StatelessWidget {
                 width: double.infinity,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: MainAxisSize.min, // This makes the Row "shrink-wrapped" to its content
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
@@ -45,17 +41,14 @@ class CourseItem extends StatelessWidget {
               ),
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: FutureBuilder<List<Widget>>(
-                  future: buildCourseCards(courseList),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else {
-                      return Row(children: snapshot.data ?? []);
-                    }
-                  },
+                child: Row(
+                  children: courseList.map((courseData) {
+                    return CourseCardItem(
+                      courseTitle: courseData.title,
+                      courseDescription: courseData.description,
+                      courseImage: courseData.imagePath,
+                    );
+                  }).toList(),
                 ),
               ),
             ],
@@ -63,28 +56,5 @@ class CourseItem extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Future<List<Widget>> buildCourseCards(List<String> courseList) async {
-    var ytInstance = yt.YoutubeExplode(); // YouTube 인스턴스 생성
-    List<Widget> courseCards = [];
-
-    for (var courseData in courseList) {
-      var video = await ytInstance.videos.get(courseData);
-      var videoTitle = video.title;
-      var courseDescription = video.description;
-      var courseImage = video.thumbnails.highResUrl;
-
-      var courseCard = CourseCardItem(
-        courseTitle: videoTitle,
-        courseDescription: courseDescription,
-        courseImage: courseImage,
-        videoId: courseData,
-      );
-      courseCards.add(courseCard);
-    }
-
-    ytInstance.close(); // 사용이 끝난 후 인스턴스를 닫아주는 것이 좋아요.
-    return courseCards;
   }
 }

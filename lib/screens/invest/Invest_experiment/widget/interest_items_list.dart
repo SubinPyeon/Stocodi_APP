@@ -24,7 +24,6 @@ class InterestItemsList extends StatelessWidget {
         title: item.title,
         price: item.price,
         percentage: item.changePercentage,
-        code: item.code,
         // onPressed: (){},
         onPressed: () {
           // 클릭 시 SellBuy 페이지로 이동하고 해당 아이템 정보 전달
@@ -36,7 +35,6 @@ class InterestItemsList extends StatelessWidget {
                   price: item.price,
                   changeValue: item.changeValue,
                   changePercentage: item.changePercentage,
-                  code: item.code,
                 ),
               ),
             ),

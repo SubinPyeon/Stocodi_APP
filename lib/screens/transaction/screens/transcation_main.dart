@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:stocodi_app/model/portfolio/portfolio_data.dart';
 import 'package:stocodi_app/theme/transaction_theme.dart';
 import 'package:stocodi_app/widgets/custom_appbar.dart';
 import '../transaction_info.dart';
@@ -19,15 +17,6 @@ class TransactionMain extends StatefulWidget {
 }
 
 class _TransactionMainState extends State<TransactionMain> {
-  late PortfolioData portfolioData;
-
-  @override
-  void initState() {
-    portfolioData = Provider.of<PortfolioData>(context, listen: false);
-    portfolioData.loadPortfolioData();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

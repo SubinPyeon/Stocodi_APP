@@ -6,7 +6,6 @@ class StockInfo extends StatelessWidget {
   final double price;
   final double changeValue;
   final double changePercentage;
-  final String code;
 
   StockInfo({
     super.key,
@@ -14,7 +13,6 @@ class StockInfo extends StatelessWidget {
     required this.price,
     required this.changeValue,
     required this.changePercentage,
-    required this.code,
   });
 
   @override

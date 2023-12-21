@@ -20,7 +20,10 @@ final selected = Container(
     color: const Color(0xff0ecb81),
   ),
 );
-var excourse = 'bcD3XMG71vw';
-var excourse1 ='Vc8_sLTM_G0';
-var excourse2 = 'kB3flfOfxzw';
-var courseList = [excourse, excourse1, excourse2];
+
+var excourse = CourseData(
+  title: '주식, 1분만에 알려드림',
+  description: 'Description of Course',
+  imagePath: 'assets/kakao.jpg', // Replace with the actual image asset path
+);
+var courseList = [excourse, excourse, excourse];

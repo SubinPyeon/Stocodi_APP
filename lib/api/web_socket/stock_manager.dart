@@ -102,25 +102,4 @@ class StockManager {
       return null;
     }
   }
-
-  // 종목 코드 반환
-  Future<Stock> getStockCode(String key) async {
-    try {
-      // Dio를 사용하는 경우, response.data로 실제 데이터에 접근할 수 있습니다.
-      final response = await stockService.getStockInfo(key);
-      final responseData = response.data; // 데이터 추출
-
-      _httpResult.PrintResult(response, '종목 검색');
-      // 반환하려는 데이터 타입에 따라 반환값을 조정
-      // responseData를 Stock 객체로 변환
-      Stock stock = Stock.fromJson(responseData);
-
-      return stock;
-
-    } catch (e) {
-      print('종목 검색 오류: $e');
-      // 에러 처리 또는 기본값을 반환하고 싶다면 이 부분을 조정
-      return Future.error('종목 검색 중 오류 발생');
-    }
-  }
 }

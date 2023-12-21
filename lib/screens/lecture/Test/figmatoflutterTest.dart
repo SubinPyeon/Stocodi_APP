@@ -1,57 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../../../theme/lecture_video_theme.dart';
-import 'package:youtube_explode_dart/youtube_explode_dart.dart' as yt;
-
-import '../Item/course_card_item.dart';
 
 final theme = LectureVideoTheme.getAppTheme();
 final textTheme = theme.textTheme;
 
-class VideoDetails extends StatefulWidget {
-  final CourseCardItem courseCardItem;
 
-  const VideoDetails({
-    Key? key,
-    required this.courseCardItem,
-  }) : super(key: key);
 
-  @override
-  _VideoDetailsState createState() => _VideoDetailsState();
-}
-
-class _VideoDetailsState extends State<VideoDetails> {
-  late String? title = null;
-  late String? date = null;
-  late String? views = null;
-  late String? author = null;
-  late String? description = null; // 비디오 설명을 저장할 변수
-  late String? authorProfileImage = null; // 프로필 이미지 주소를 저장할 변수
-  bool showDetails = false;
-
-  @override
-  void initState() {
-    super.initState();
-    getVideoDetails();
-  }
-
-  Future<void> getVideoDetails() async {
-    var ytInstance = yt.YoutubeExplode();
-    var video = await ytInstance.videos.get(widget.courseCardItem.videoId);
-
-    setState(() {
-      title = video.title;
-      date = DateFormat('yyyy-MM-dd HH:mm').format(video.uploadDate!);
-      views = '조회수 ${video.engagement.viewCount}';
-      author = video.author;
-    });
-
-    // 작성자(author)의 채널 정보 가져오기
-    var channel = await ytInstance.channels.getByUsername(author!); // 수정된 부분
-    authorProfileImage = channel.logoUrl;
-
-    ytInstance.close();
-  }
+class VideoDetails extends StatelessWidget {
+  const VideoDetails({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -64,8 +20,8 @@ class _VideoDetailsState extends State<VideoDetails> {
           Container(
             margin: const EdgeInsets.only(bottom: 16),
             child: Text(
-              widget.courseCardItem.courseTitle,
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              '초보 주식투자자들이 흔히 하는 실수 박곰희 1부',
+              style: textTheme.displayLarge,
             ),
           ),
           Row(
@@ -74,48 +30,23 @@ class _VideoDetailsState extends State<VideoDetails> {
               Container(
                 margin: const EdgeInsets.only(right: 17),
                 child: Text(
-                  date ?? '날짜 없음',
-                  style: TextStyle(fontSize: 14),
+                  '2023.05.25',
+                  style: textTheme.displaySmall,
                 ),
               ),
               Container(
                 margin: const EdgeInsets.only(right: 23),
                 child: Text(
-                  views ?? '조회수 없음',
-                  style: TextStyle(fontSize: 14),
+                  '조회 2.8천회',
+                  style: textTheme.displaySmall,
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    showDetails = !showDetails;
-                  });
-                  // if (showDetails) {
-                  //   widget.courseCardItem.courseDescription; // 더보기를 눌렀을 때 비디오 설명 가져오기
-                  // }
-                },
-                child: Text(
-                  '더보기',
-                  style: TextStyle(fontSize: 14),
-                ),
+              Text(
+                '더보기',
+                style: textTheme.displaySmall,
               ),
             ],
           ),
-          if (showDetails)
-            Container(
-              margin: const EdgeInsets.fromLTRB(5, 20, 0, 0),
-              width: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.courseCardItem.courseDescription,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 8),
-                ],
-              ),
-            ),
           Container(
             margin: const EdgeInsets.fromLTRB(5, 20, 0, 0),
             width: double.infinity,
@@ -128,20 +59,111 @@ class _VideoDetailsState extends State<VideoDetails> {
                   height: 32,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
-                    image: authorProfileImage != null
-                        ? DecorationImage(
+                    image: const DecorationImage(
                       fit: BoxFit.cover,
-                      image: NetworkImage(authorProfileImage!), // 작성자 프로필 이미지
-                    )
-                        : const DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage('assets/kakao.jpg'),
-                    ), // 이미지가 없을 경우
+                      image: AssetImage('assets/kakao.jpg'), // 이미지 파일의 경로를 적절히 수정하세요.
+                    ),
                   ),
                 ),
                 Text(
-                  author ?? '작성자 없음', // 작성자 이름을 표시하거나 '작성자 없음' 표시
-                  style: TextStyle(fontSize: 16),
+                  '박곰희',
+                  style: textTheme.displayMedium,
+                ),
+              ],
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.only(top: 20),
+            height: 40,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(right: 8),
+                  height: double.infinity,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(right: 8),
+                        padding: const EdgeInsets.fromLTRB(16, 8, 0, 8),
+                        width: 86,
+                        height: double.infinity,
+                        decoration: BoxDecoration(
+                          color: const Color(0xfff5f7f9),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                                margin: const EdgeInsets.only(right: 6),
+                                width: 24,
+                                height: 24,
+                                child: const Icon(Icons.favorite, color: Color(0xFF9BA6AF))
+                            ),
+                            Text(
+                              '60K',
+                              style: textTheme.labelSmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(16, 8, 27, 8),
+                        width: 96,
+                        height: double.infinity,
+                        decoration: BoxDecoration(
+                          color: const Color(0xfff5f7f9),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.fromLTRB(6, 2, 0, 2),
+                          width: double.infinity,
+                          height: double.infinity,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(right: 11),
+                                width: 13,
+                                height: 16,
+                                child: const Icon(Icons.bookmark, color: Color(0xFF9BA6AF)),
+                              ),
+                              Text(
+                                '스크랩',
+                                style: textTheme.labelSmall,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: 110,
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                    color: const Color(0xfff5f7f9),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(15, 2, 0, 2),
+                    child: Row(
+                      children: [
+                        Container(
+                            margin: const EdgeInsets.only(right: 5),
+                            child: const Icon(Icons.link, color: Color(0xFF9BA6AF))),
+                        Text('링크 복사', style: textTheme.labelSmall,),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: Icon(Icons.more_vert, color: Color(0xFF9BA6AF)),
                 ),
               ],
             ),

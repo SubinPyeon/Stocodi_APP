@@ -4,10 +4,9 @@ import '../screens/lecture/classroom.dart';
 import '../screens/lecture/lecture.dart';
 import '../screens/lecture/widget/comment.dart';
 
-void main() {
+void main(){
   runApp(const DongGi());
 }
-
 class DongGi extends StatelessWidget {
   const DongGi({super.key});
 
@@ -36,17 +35,25 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ClassRoom()),
+                  MaterialPageRoute(builder: (context)=> ClassRoom()),
                 );
               },
               child: const Text('classroom'),
             ),
-            const Text('LectureActivity'),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SignUp()),
+                  MaterialPageRoute(builder: (context)=> Lecture()),
+                );
+              },
+              child: const Text('LectureActivity'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context)=> SignUp()),
                 );
               },
               child: const Text('API'),
@@ -55,11 +62,12 @@ class HomeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => Comment()),
+                  MaterialPageRoute(builder: (context)=> Comment()),
                 );
               },
               child: const Text('MyComment'),
             ),
+
           ],
         ),
       ),

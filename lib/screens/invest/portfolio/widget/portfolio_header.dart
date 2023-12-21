@@ -1,108 +1,95 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:stocodi_app/model/portfolio/response/portfolio_response.dart';
 import 'package:stocodi_app/theme/app_theme.dart';
 import 'package:stocodi_app/widgets/round_square_container.dart';
-import '../../../../model/portfolio/portfolio_data.dart';
+import '../data/portfolio_data.dart';
 
-class PortfolioHeader extends StatelessWidget {
-  const PortfolioHeader({Key? key}) : super(key: key);
+class PortfolioHeader extends StatefulWidget {
+  PortfolioHeader({super.key});
+
+  @override
+  _PortfolioHeaderState createState() => _PortfolioHeaderState();
+}
+
+class _PortfolioHeaderState extends State<PortfolioHeader> {
+  ThemeData theme = AppTheme.appTheme;
+
+  late List<PortfolioData> portfolioList;
+  late PortfolioData selectedPortfolio;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // initState 내에서 초기화
+    portfolioList = [
+      PortfolioData("유의 포트폴리오_1", 10000000, 123000, 7.0),
+      PortfolioData("유의 포트폴리오_2", 15000000, -20000, -1.0),
+      PortfolioData("유의 포트폴리오_3", 8000000, 45000, 5.0),
+    ];
+
+    selectedPortfolio = portfolioList[0];
+  }
 
   @override
   Widget build(BuildContext context) {
-    final theme = AppTheme.appTheme;
-    final currencyFormat = NumberFormat.currency(locale: 'ko_KR', symbol: '');
+    final NumberFormat currencyFormat = NumberFormat.currency(locale: 'ko_KR', symbol: ''); // 천의 단위로 ','로 구분
 
-    return Consumer<PortfolioData>(
-      builder: (context, portfolioData, _) {
-        return RoundSquareContainer(
-          width: double.infinity,
-          height: 160,
-          child: Column(
-            children: [
-              Expanded(
-                flex: 1,
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  child: portfolioData.portfolioList != null &&
-                          portfolioData.portfolioList!.isNotEmpty
-                      ? DropdownButton<PortfoiloResponse>(
-                          underline: SizedBox.shrink(),
-                          value: portfolioData.selectedPortfolio,
-                          items: portfolioData.portfolioList!
-                              .map((PortfoiloResponse portfolio) =>
-                                  DropdownMenuItem(
-                                      value: portfolio,
-                                      child: Text(
-                                        overflow: TextOverflow.ellipsis,
-                                        portfolio.account.account_name,
-                                        style: theme.textTheme.titleSmall,
-                                      )))
-                              .toSet()
-                              .toList(),
-                          onChanged: (newValue) {
-                            if (newValue != null) {
-                              portfolioData.updateSelected(newValue);
-                            }
-                          },
-                        )
-                      : Text(
-                          '우측 상단에서 계좌를 추가하세요.',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        ),
-                ),
-              ),
-              Expanded(
-                flex: 3,
-                child: Container(
-                  alignment: Alignment.centerLeft,
+    return RoundSquareContainer(
+      width: double.infinity,
+      height: 160, // 원래 154
+      child: Column(
+        children: [
+          Container(
+            height: 22,
+            alignment: Alignment.centerLeft,
+            child: DropdownButton<PortfolioData>(
+              underline: SizedBox.shrink(),
+              value: selectedPortfolio, // 현재 선택된 포트폴리오
+              items: portfolioList.map((PortfolioData portfolio) {
+                return DropdownMenuItem<PortfolioData>(
+                  value: portfolio,
                   child: Text(
-                    portfolioData.portfolioList != null &&
-                            portfolioData.portfolioList!.isNotEmpty
-                        ? "${currencyFormat.format(portfolioData.selectedPortfolio.account.remain_cash)} 원"
-                        : "0원", // 자산 업데이트
-                    style: TextStyle(
-                      fontWeight: FontWeight.w800,
-                      fontSize: 32,
-                    ),
+                    portfolio.name,
+                    style: theme.textTheme.titleSmall,
                   ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  child: portfolioData.portfolioList != null &&
-                          portfolioData.portfolioList!.isNotEmpty
-                      ? Text(
-                          "${portfolioData.selectedPortfolio.account.unrealized_gain >= 0 ? "+" : ""}${currencyFormat.format(portfolioData.selectedPortfolio.account.unrealized_gain)}원 (${portfolioData.selectedPortfolio.account.cumulative_returns.toStringAsFixed(2)}%)",
-                          // 수익률 업데이트
-                          style: TextStyle(
-                            color: portfolioData.selectedPortfolio.account
-                                        .unrealized_gain >=
-                                    0
-                                ? Color(0xffF6465D)
-                                : Color(0xff4496F7),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12,
-                          ),
-                        )
-                      : Text(
-                          "0원 (0.00%)",
-                          // 수익률 업데이트
-                          style: TextStyle(
-                            color: Color(0xffF6465D),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12,
-                          ),
-                        ),
-                ),
-              ),
-            ],
+                );
+              }).toList(),
+              onChanged: (PortfolioData? newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    selectedPortfolio = newValue;
+                  });
+                }
+              },
+            ),
           ),
-        );
-      },
+          SizedBox(height: 28),
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "${currencyFormat.format(selectedPortfolio.totalValue)} 원", // 자산 업데이트
+              style: TextStyle(
+                fontWeight: FontWeight.w800,
+                fontSize: 32,
+              ),
+            ),
+          ),
+          SizedBox(height: 4),
+          Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              (selectedPortfolio.changeValue > 0 ? "+" : "") +
+                  "${currencyFormat.format(selectedPortfolio.changeValue)}원 (${selectedPortfolio.changePercentage.toStringAsFixed(2)}%)", // 수익률 업데이트
+              style: TextStyle(
+                color: selectedPortfolio.changeValue >= 0 ? Color(0xffF6465D) : Color(0xff4496F7),
+                fontWeight: FontWeight.w500,
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
