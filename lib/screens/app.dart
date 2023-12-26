@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stocodi_app/screens/tmp/tmp_mypage.dart';
 import '../theme/app_theme.dart';
 import 'home/home.dart';
+import 'invest/Invest_experiment/stock_read_naver.dart';
 import 'invest/invest_experiment.dart';
 import 'lecture/classroom.dart';
 
